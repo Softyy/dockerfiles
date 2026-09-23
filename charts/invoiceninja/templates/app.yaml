@@ -34,28 +34,14 @@ spec:
             - /bin/sh
             - -c
             - |
-              {{- if .Values.env.dbHost }}
-              until nc -z {{ .Values.env.dbHost }} {{ .Values.env.dbPort }}; do
-                echo "waiting for external mysql at {{ .Values.env.dbHost }}";
-                sleep 2;
-              done
-              {{- else if .Values.mysql.enabled }}
-              until nc -z {{ include "invoiceninja.mysqlServiceName" . }} {{ .Values.mysql.service.port }}; do
+              until nc -z {{ include "invoiceninja.dbHost" . }} {{ .Values.env.dbPort }}; do
                 echo "waiting for mysql";
                 sleep 2;
               done
-              {{- end }}
-              {{- if .Values.env.redisHost }}
-              until nc -z {{ .Values.env.redisHost }} {{ .Values.env.redisPort }}; do
-                echo "waiting for external redis at {{ .Values.env.redisHost }}";
-                sleep 2;
-              done
-              {{- else if .Values.redis.enabled }}
-              until nc -z {{ include "invoiceninja.redisServiceName" . }} {{ .Values.redis.service.port }}; do
+              until nc -z {{ include "invoiceninja.redisHost" . }} {{ .Values.env.redisPort }}; do
                 echo "waiting for redis";
                 sleep 2;
               done
-              {{- end }}
       containers:
         - name: app
           image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"

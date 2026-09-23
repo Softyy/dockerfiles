@@ -15,12 +15,10 @@ data:
   CACHE_DRIVER: {{ .Values.env.cacheDriver | quote }}
   QUEUE_CONNECTION: {{ .Values.env.queueConnection | quote }}
   SESSION_DRIVER: {{ .Values.env.sessionDriver | quote }}
-  {{- $redisHost := .Values.env.redisHost | default (ternary (include "invoiceninja.redisServiceName" .) "" .Values.redis.enabled) }}
-  REDIS_HOST: {{ $redisHost | required "env.redisHost is required when redis.enabled is false" | quote }}
+  REDIS_HOST: {{ include "invoiceninja.redisHost" . | quote }}
   REDIS_PORT: {{ .Values.env.redisPort | quote }}
   FILESYSTEM_DISK: {{ .Values.env.filesystemDisk | quote }}
-  {{- $dbHost := .Values.env.dbHost | default (ternary (include "invoiceninja.mysqlServiceName" .) "" .Values.mysql.enabled) }}
-  DB_HOST: {{ $dbHost | required "env.dbHost is required when mysql.enabled is false" | quote }}
+  DB_HOST: {{ include "invoiceninja.dbHost" . | quote }}
   DB_PORT: {{ .Values.env.dbPort | quote }}
   DB_DATABASE: {{ .Values.env.dbDatabase | quote }}
   DB_USERNAME: {{ .Values.env.dbUsername | quote }}
